@@ -35,7 +35,7 @@ func (d6 *Deep6DB) FindById(id string) (map[string][]map[string]interface{}, err
 	pseudoStream = append(pseudoStream, m)
 	result, err := filterResults(pseudoStream, FilterSpec{})
 
-	return result, nil
+	return result, err
 
 }
 

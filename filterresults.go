@@ -40,6 +40,7 @@ func filterResults(searchResults []map[string]interface{}, filterSpec FilterSpec
 	if err != nil {
 		return nil, errors.Wrap(err, "Error: cannot create object-tidy component:")
 	}
+	errcList = append(errcList, errc)
 
 	// sink for pipeline
 	for igd := range tidyOut {

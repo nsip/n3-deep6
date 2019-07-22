@@ -1,5 +1,15 @@
-// deep6.go
-
+//
+// Deep6 is a simple embeddable hexastore graph database.
+// To the core hexastore tuple index we add auto-generated
+// links based on selected property values, and offer
+// object traversals over linked data types.
+//
+// The use-case deep6 was creted for is to link data formats
+// of different types in the education-technology space together
+// so that user can retrieve, for example, all SIF, XAPI statements
+// or abitrary json objects related to a student, a teacher or a school.
+//
+//
 package deep6
 
 import (
@@ -60,7 +70,7 @@ func OpenFromFile(folderPath string) (*Deep6DB, error) {
 
 //
 // Open a d6db will use the local path
-// ./db/badger by default
+// ./db/d6 by default
 //
 func Open() (*Deep6DB, error) {
 

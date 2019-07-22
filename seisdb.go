@@ -1,3 +1,5 @@
+package deep6
+
 // SeisDB is a Hexastore based on this paper
 // http://www.vldb.org/pvldb/1/1453965.pdf
 
@@ -13,7 +15,6 @@
 // within the db, rather than being linked at query time.
 //
 //
-package deep6
 
 import (
 	"fmt"
