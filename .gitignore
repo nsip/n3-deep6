@@ -3,3 +3,4 @@ example/d6/d6
 *.vlog
 *.sst
 *.sbf
+example/d6/out.txt
