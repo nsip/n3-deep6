@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/matt-farmer/deep6"
+	deep6 "github.com/nsip/n3-deep6"
 )
 
 func main() {
