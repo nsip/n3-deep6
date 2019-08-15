@@ -41,16 +41,7 @@ func (d6 *Deep6DB) IngestFromFile(fname string) error {
 //
 func (d6 *Deep6DB) IngestFromHTTPRequest(r *http.Request) error {
 
-	err := runIngestWithReader(d6.db, d6.iwb, d6.sbf, r.Body, d6.AuditLevel)
-	if err != nil {
-		return errors.Wrap(err, "error ingesting data from http request body:")
-	}
-	// ensure the writer finishes
-	d6.iwb.Flush()
-	// reinstate the writer
-	d6.iwb = d6.db.NewWriteBatch()
-
-	return err
+	return d6.IngestFromReader(r.Body)
 
 }
 
