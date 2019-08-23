@@ -6,3 +6,6 @@ example/d6/d6
 example/d6/out.txt
 example/d6/out.txt
 example/d6/db/d6/MANIFEST
+example/d6/config/datatypes.toml
+example/d6/db/d6/config/datatypes.toml
+example/d6/db/d6/MANIFEST

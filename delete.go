@@ -19,7 +19,7 @@ func (d6 *Deep6DB) Delete(id string) error {
 
 	defer timeTrack(time.Now(), "Delete()")
 
-	err := deleteWithID(id, d6.db, d6.rwb, d6.sbf, d6.AuditLevel)
+	err := deleteWithID(id, d6.db, d6.rwb, d6.sbf, d6.AuditLevel, d6.folderPath)
 	if err != nil {
 		return errors.Wrap(err, "cannot delete object: "+id)
 	}
@@ -32,7 +32,7 @@ func (d6 *Deep6DB) Delete(id string) error {
 
 }
 
-func deleteWithID(id string, db *badger.DB, wb *badger.WriteBatch, sbf *boom.ScalableBloomFilter, auditLevel string) error {
+func deleteWithID(id string, db *badger.DB, wb *badger.WriteBatch, sbf *boom.ScalableBloomFilter, auditLevel, folderPath string) error {
 
 	// see if object exists
 	obj, err := findById(id, db)
@@ -54,6 +54,6 @@ func deleteWithID(id string, db *badger.DB, wb *badger.WriteBatch, sbf *boom.Sca
 	r := bytes.NewReader(json)
 
 	// now run the remove sequence
-	return runRemoveWithReader(db, wb, sbf, r, auditLevel)
+	return runRemoveWithReader(db, wb, sbf, r, auditLevel, folderPath)
 
 }

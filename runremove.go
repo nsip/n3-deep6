@@ -37,7 +37,7 @@ import (
 // r - the io.Reader (file, http body etc.) to be ingested
 // auditLevel - one of: none, basic, high
 //
-func runRemoveWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.ScalableBloomFilter, r io.Reader, auditLevel string) error {
+func runRemoveWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.ScalableBloomFilter, r io.Reader, auditLevel, folderPath string) error {
 
 	// set up a context to manage ingest pipeline
 	ctx, cancelFunc := context.WithCancel(context.Background())
@@ -55,7 +55,7 @@ func runRemoveWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scalabl
 	}
 	errcList = append(errcList, errc)
 
-	classOut, errc, err := objectClassifier(ctx, jsonOut)
+	classOut, errc, err := objectClassifier(ctx, folderPath, jsonOut)
 	if err != nil {
 		return errors.Wrap(err, "Error: cannot create object-classifier component: ")
 	}

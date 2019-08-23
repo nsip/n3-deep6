@@ -24,15 +24,7 @@ func (d6 *Deep6DB) IngestFromFile(fname string) error {
 		return errors.Wrap(err, "cannot open data file: ")
 	}
 
-	err = runIngestWithReader(d6.db, d6.iwb, d6.sbf, f, d6.AuditLevel)
-	if err != nil {
-		return errors.Wrap(err, "error ingesting data file: "+fname)
-	}
-	// ensure the writer finishes
-	d6.iwb.Flush()
-	// reinstate the writer
-	d6.iwb = d6.db.NewWriteBatch()
-	return err
+	return d6.IngestFromReader(f)
 
 }
 
@@ -50,7 +42,27 @@ func (d6 *Deep6DB) IngestFromHTTPRequest(r *http.Request) error {
 //
 func (d6 *Deep6DB) IngestFromReader(r io.Reader) error {
 
-	err := runIngestWithReader(d6.db, d6.iwb, d6.sbf, r, d6.AuditLevel)
+	err := runIngestWithReader(d6.db, d6.iwb, d6.sbf, r, d6.AuditLevel, d6.folderPath)
+	if err != nil {
+		return errors.Wrap(err, "error ingesting data from reader:")
+	}
+	// ensure the writer finishes
+	d6.iwb.Flush()
+	// reinstate the writer
+	d6.iwb = d6.db.NewWriteBatch()
+
+	return err
+
+}
+
+//
+// Feed data into db from a channel providing json objects as
+// byte slices - typically for us the iterator from crdt manager
+// receiver
+//
+func (d6 *Deep6DB) IngestFromJSONChannel(c <-chan []byte) error {
+
+	err := runIngestWithIterator(d6.db, d6.iwb, d6.sbf, c, d6.AuditLevel, d6.folderPath)
 	if err != nil {
 		return errors.Wrap(err, "error ingesting data from reader:")
 	}
