@@ -3,6 +3,7 @@
 package deep6
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -17,10 +18,10 @@ import (
 // on ordering of data ingest, all models can loaded
 // in any order or in mixed input files/streams
 //
-func openSBF() *boom.ScalableBloomFilter {
+func openSBF(folderPath string) *boom.ScalableBloomFilter {
 
 	sbf := boom.NewDefaultScalableBloomFilter(0.01)
-	sbfFile := "./db/featureLinks.sbf"
+	sbfFile := fmt.Sprintf("%s/sbf/featureLinks.sbf", folderPath)
 	f, err := os.Open(sbfFile)
 	if err != nil {
 		log.Println("cannot find sbf file, creating new sbf.")
@@ -38,8 +39,16 @@ func openSBF() *boom.ScalableBloomFilter {
 //
 // saves the supplied sbf to disk
 //
-func saveSBF(sbf *boom.ScalableBloomFilter) {
-	sbfFile := "./db/featureLinks.sbf"
+func saveSBF(sbf *boom.ScalableBloomFilter, folderPath string) {
+
+	sbfPath := fmt.Sprintf("%s/sbf", folderPath)
+	err := os.MkdirAll(sbfPath, os.ModePerm)
+	if err != nil {
+		log.Println("cannot create sbf folder: ", sbfPath, err)
+		return
+	}
+
+	sbfFile := fmt.Sprintf("%s/featureLinks.sbf", sbfPath)
 	f, err := os.Create(sbfFile)
 	if err != nil {
 		log.Println("cannot create sbf file:", err)

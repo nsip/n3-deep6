@@ -5,6 +5,7 @@ package deep6
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -24,7 +25,7 @@ import (
 // in - channel providing map[string]interface{} containing
 // the json data
 //
-func objectClassifier(ctx context.Context, in <-chan map[string]interface{}) (
+func objectClassifier(ctx context.Context, filePath string, in <-chan map[string]interface{}) (
 	<-chan IngestData, // emits IngestData objects with classification elements
 	<-chan error, // emits errors encountered to the pipeline manager
 	error) { // any error encountered when creating this component
@@ -47,7 +48,8 @@ func objectClassifier(ctx context.Context, in <-chan map[string]interface{}) (
 		Classifier []classifier
 	}
 	var c classifiers
-	if _, err := toml.DecodeFile("./config/datatypes.toml", &c); err != nil {
+	classifierFile := fmt.Sprintf("%s/config/datatypes.toml", filePath)
+	if _, err := toml.DecodeFile(classifierFile, &c); err != nil {
 		return nil, nil, err
 	}
 
