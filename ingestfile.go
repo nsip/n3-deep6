@@ -64,7 +64,7 @@ func (d6 *Deep6DB) IngestFromJSONChannel(c <-chan []byte) error {
 
 	err := runIngestWithIterator(d6.db, d6.iwb, d6.sbf, c, d6.AuditLevel, d6.folderPath)
 	if err != nil {
-		return errors.Wrap(err, "error ingesting data from reader:")
+		return errors.Wrap(err, "error ingesting data from channel reader:")
 	}
 	// ensure the writer finishes
 	d6.iwb.Flush()

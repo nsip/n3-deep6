@@ -78,7 +78,7 @@ func traversalWithId(id string, traversalspec []string, filterspec FilterSpec, d
 	errcList = append(errcList, errc)
 
 	//
-	// for the rest of the traversal follow the following patter:
+	// for the rest of the traversal follow the following pattern:
 	//
 	// find links from the current object (in and out)
 	// filter the linked objects by the next object-type in the traversal
