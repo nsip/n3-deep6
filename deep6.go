@@ -104,21 +104,24 @@ func Open() (*Deep6DB, error) {
 //
 func (d6 *Deep6DB) Close() {
 	log.Println("closing d6 database...")
-	// err := d6.iwb.Flush()
-	// if err != nil {
-	// 	log.Println("error flushing ingest writebatch: ", err)
-	// }
-	// err = d6.rwb.Flush()
-	// if err != nil {
-	// 	log.Println("error flushing delete writebatch: ", err)
-	// }
-	err := d6.db.Close()
+
+	err := d6.iwb.Flush()
+	if err != nil {
+		log.Println("error flushing ingest writebatch: ", err)
+	}
+	err = d6.rwb.Flush()
+	if err != nil {
+		log.Println("error flushing delete writebatch: ", err)
+	}
+
+	err = d6.db.Close()
 	if err != nil {
 		log.Println("error closing datastore:", err)
 	}
-	log.Println("...d6 database closed")
+
 	log.Println("saving sbf....")
 	saveSBF(d6.sbf, d6.folderPath)
 	log.Println("...sbf saved.")
+	log.Println("...d6 database closed")
 
 }

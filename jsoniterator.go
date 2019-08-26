@@ -31,23 +31,18 @@ func jsonIteratorSource(ctx context.Context, c <-chan []byte) (
 		defer close(out)
 		defer close(errc)
 
-		// count := 0
 		for jsonBytes := range c {
 			var m map[string]interface{}
 			if err := json.Unmarshal(jsonBytes, &m); err != nil {
 				errc <- errors.Wrap(err, "unable to unmarshal json jsonIteratorSource():")
 				return
 			}
-			// count++
 
 			select {
 			case out <- m: // pass the map onto the next stage
 			case <-ctx.Done(): // listen for pipeline shutdown
 				return
 			}
-			// if count == 3200 {
-			// 	break
-			// }
 		}
 
 	}()

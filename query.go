@@ -67,7 +67,7 @@ func findById(id string, db *badger.DB) (map[string]interface{}, error) {
 	//
 	// internal findByID() does not use filter
 	// to arrange content by type, that's done in the
-	// method above, as many internal services rely on
+	// d6 method above, as many internal services rely on
 	// just getting the basic map from this method.
 	//
 
