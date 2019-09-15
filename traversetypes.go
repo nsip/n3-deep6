@@ -38,7 +38,7 @@ func traverseTypes(ctx context.Context, objectType string, filterSpec FilterSpec
 					prefix := []byte(fmt.Sprintf("pso|is-a|%s|%s", id, objectType))
 					for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 						item := it.Item()
-						t := NewTriple(string(item.Key()))
+						t := NewTriple(string(item.KeyCopy(nil)))
 						matches[t.S] = objectType
 					}
 				}

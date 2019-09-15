@@ -35,13 +35,13 @@ func traverseLinks(ctx context.Context, db *badger.DB, in <-chan TraversalData) 
 					// find inbound links
 					for it.Seek(linkinPrefix); it.ValidForPrefix(linkinPrefix); it.Next() {
 						item := it.Item()
-						t := NewTriple(string(item.Key()))
+						t := NewTriple(string(item.KeyCopy(nil)))
 						targets[t.S] = targetType
 					}
 					// find outgoing links
 					for it.Seek(linkoutPrefix); it.ValidForPrefix(linkoutPrefix); it.Next() {
 						item := it.Item()
-						t := NewTriple(string(item.Key()))
+						t := NewTriple(string(item.KeyCopy(nil)))
 						targets[t.O] = targetType
 					}
 
