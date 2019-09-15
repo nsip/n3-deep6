@@ -43,7 +43,7 @@ func linkBuilder(ctx context.Context, db *badger.DB, wb *badger.WriteBatch, in <
 					prefix := []byte(fmt.Sprintf("spo|%s|is-a|", candidate.O))
 					for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 						item := it.Item()
-						t := NewTriple(string(item.Key()))
+						t := NewTriple(string(item.KeyCopy(nil)))
 						linksTo[t.S] = struct{}{}
 					}
 				}

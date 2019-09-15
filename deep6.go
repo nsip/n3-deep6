@@ -62,13 +62,18 @@ func OpenFromFile(folderPath string) (*Deep6DB, error) {
 
 	options := badger.DefaultOptions(folderPath)
 	// options = options.WithSyncWrites(false) // speed optimisation if required
+	options = options.WithNumVersionsToKeep(3)
 	db, err := badger.Open(options)
 	if err != nil {
 		return nil, err
 	}
+	// log.Println("--- db batch count = ", db.MaxBatchCount(), " ---")
+
+	// db write managers
 	iwb := db.NewWriteBatch()
 	rwb := db.NewWriteBatch()
 
+	// create/open bloom filter
 	sbf := openSBF(folderPath)
 
 	err = createDefaultConfig(folderPath)
