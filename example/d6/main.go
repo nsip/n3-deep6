@@ -37,13 +37,13 @@ func main() {
 	// load sample data
 	//
 	sampleDataPaths := []string{
-		// "./sample_data/xapi/xapi.json",
+		"./sample_data/xapi/xapi.json",
 		"./sample_data/naplan/sif.json",
-		// "./sample_data/subjects/subjects.json",
-		// "./sample_data/lessons/lessons.json",
-		// "./sample_data/curriculum/overview.json",
-		// "./sample_data/curriculum/content.json",
-		// "./sample_data/sif/sif.json",
+		"./sample_data/subjects/subjects.json",
+		"./sample_data/lessons/lessons.json",
+		"./sample_data/curriculum/overview.json",
+		"./sample_data/curriculum/content.json",
+		"./sample_data/sif/sif.json",
 	}
 
 	for _, path := range sampleDataPaths {
