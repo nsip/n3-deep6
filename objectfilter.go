@@ -36,8 +36,8 @@ func objectFilter(ctx context.Context, filterSpec FilterSpec, in <-chan map[stri
 			filtered := false
 			if ok { // there is a filter for this type
 				m2 := Flatten(m)
+				filtersPassed := 0
 				for k, v := range m2 {
-					filtersPassed := 0
 					for _, filter := range filters {
 						if strings.Contains(k, filter.Predicate) && v == filter.TargetValue {
 							filtersPassed++
