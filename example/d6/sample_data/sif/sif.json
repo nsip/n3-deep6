@@ -1,23 +1,4 @@
 [
-    {
-        "SchoolInfo":
-        {
-            "RefId": "738F4DF5-949F-4380-8186-8252440A6F6F",
-            "LocalId": "01011234",
-            "StateProvinceId": "01011234",
-            "CommonwealthId": "012345",
-            "SchoolName": "Lincoln Secondary College",
-            "SchoolDistrict": " Southern Metropolitan Region",
-            "SchoolType": "Pri/Sec",
-            "SchoolFocusList":
-            {
-                "SchoolFocus": ["01", "03"]
-            },
-            "SchoolURL": "http://www.lincolnsc.edu.vic.au",
-            "SchoolSector": "Gov"
-        }
-    },
-
 
     {
         "SchoolCourseInfo":
@@ -175,6 +156,25 @@
             },
             "CourseTitle": "English 8",
             "CourseCredits": "2"
+        }
+    },
+
+    {
+        "SchoolInfo":
+        {
+            "RefId": "738F4DF5-949F-4380-8186-8252440A6F6F",
+            "LocalId": "01011234",
+            "StateProvinceId": "01011234",
+            "CommonwealthId": "012345",
+            "SchoolName": "Lincoln Secondary College",
+            "SchoolDistrict": " Southern Metropolitan Region",
+            "SchoolType": "Pri/Sec",
+            "SchoolFocusList":
+            {
+                "SchoolFocus": ["01", "03"]
+            },
+            "SchoolURL": "http://www.lincolnsc.edu.vic.au",
+            "SchoolSector": "Gov"
         }
     },
 

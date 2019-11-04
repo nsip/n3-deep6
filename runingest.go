@@ -66,7 +66,13 @@ func runIngestWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scalabl
 	}
 	errcList = append(errcList, errc)
 
-	builderOut, errc, err := linkBuilder(ctx, db, wb, linkerOut)
+	reverselinkerOut, errc, err := linkReverseChecker(ctx, db, linkerOut)
+	if err != nil {
+		return errors.Wrap(err, "Error: cannot create reverse-link-checker component: ")
+	}
+	errcList = append(errcList, errc)
+
+	builderOut, errc, err := linkBuilder(ctx, db, wb, reverselinkerOut)
 	if err != nil {
 		return errors.Wrap(err, "Error: cannot create link-builder component: ")
 	}
@@ -137,7 +143,13 @@ func runIngestWithIterator(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scala
 	}
 	errcList = append(errcList, errc)
 
-	builderOut, errc, err := linkBuilder(ctx, db, wb, linkerOut)
+	reverselinkerOut, errc, err := linkReverseChecker(ctx, db, linkerOut)
+	if err != nil {
+		return errors.Wrap(err, "Error: cannot create reverse-link-checker component: ")
+	}
+	errcList = append(errcList, errc)
+
+	builderOut, errc, err := linkBuilder(ctx, db, wb, reverselinkerOut)
 	if err != nil {
 		return errors.Wrap(err, "Error: cannot create link-builder component: ")
 	}

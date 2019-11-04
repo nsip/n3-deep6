@@ -37,13 +37,14 @@ func main() {
 	// load sample data
 	//
 	sampleDataPaths := []string{
-		"./sample_data/xapi/xapi.json",
-		"./sample_data/naplan/sif.json",
+		// "./sample_data/xapi/xapi.json",
+		// "./sample_data/naplan/sif.json",
 		"./sample_data/subjects/subjects.json",
 		"./sample_data/lessons/lessons.json",
 		"./sample_data/curriculum/overview.json",
 		"./sample_data/curriculum/content.json",
 		"./sample_data/sif/sif.json",
+		"./sample_data/xapi/xapi.json",
 	}
 
 	for _, path := range sampleDataPaths {
@@ -189,20 +190,34 @@ func main() {
 	// id := "lzrlb501" // staff personal localid
 	fmt.Println("==== TraversalWithId() and Filter ====")
 	fmt.Println("\t starting traversal at: " + startid)
-	// create traversal as json
+
+	// // create traversal as json
+	// traversalDef := `{"TraversalSpec":[
+	// 	"StaffPersonal",
+	// 	"TeachingGroup",
+	// 	"GradingAssignment",
+	// 	"Property.Link",
+	// 	"XAPI",
+	// 	"Property.Link",
+	// 	"Subject",
+	// 	"Unique.Link",
+	// 	"Syllabus",
+	// 	"Unique.Link",
+	// 	"Lesson"
+	// ]}`
+
 	traversalDef := `{"TraversalSpec":[
 		"StaffPersonal",
 		"TeachingGroup",
 		"GradingAssignment",
-		"Property.Link",
 		"XAPI",
-		"Property.Link",
 		"Subject",
-		"Unique.Link",
-		"Syllabus",
-		"Unique.Link",
-		"Lesson"
+	 	"Unique.Link",
+	 	"Syllabus",
+	 	"Unique.Link",
+	 	"Lesson"
 	]}`
+
 	fmt.Println("Traversal Spec:\n", traversalDef)
 	var jsonTraversal deep6.Traversal
 	if err := json.Unmarshal([]byte(traversalDef), &jsonTraversal); err != nil {
@@ -282,6 +297,47 @@ func main() {
 	prettyJSON.Reset()
 
 	//
+	// Ordering...
+	// ordering of sif objects, check reverse lookup
+	// add sif objects out of order & check links;
+	// in sample file schoolinfo comes after
+	// schoolcourseinfo objects that reference it
+	// so this traversal will only work if reverse
+	// links are correct.
+	//
+	fmt.Println("==== ordering check ====")
+	schoolId := "738F4DF5-949F-4380-8186-8252440A6F6F"
+	fmt.Println("==== TraversalWithId() ====")
+	fmt.Println("\t starting traversal at: " + schoolId)
+	orderedTraversalDef := `{"TraversalSpec":[
+		"SchoolInfo",
+		"SchoolCourseInfo"
+	]}`
+	fmt.Println("=== should return 1 schoolinfo 8 schoolcourseinfos ====")
+	fmt.Println("Traversal Spec:\n", orderedTraversalDef)
+	var jsonOrderedTraversal deep6.Traversal
+	if err := json.Unmarshal([]byte(orderedTraversalDef), &jsonOrderedTraversal); err != nil {
+		panic(err)
+	}
+	resultsOrderedTraversal, err := db.TraversalWithId(schoolId, jsonOrderedTraversal, deep6.FilterSpec{})
+	if err != nil {
+		fmt.Println("Cannot follow traversal from:" + startid)
+		return
+	}
+	fmt.Println("results size: ", len(resultsOrderedTraversal))
+	//
+	// pretty print the json query response
+	//
+	jsonBytes, err = json.Marshal(resultsOrderedTraversal)
+	if err != nil {
+		log.Fatal("ERROR: json marshalling error: ", err)
+	}
+	err = json.Indent(&prettyJSON, jsonBytes, "", "    ")
+	fmt.Println(string(prettyJSON.Bytes()))
+	fmt.Println("==========")
+	prettyJSON.Reset()
+
+	//
 	// TraversalWithValue()
 	//
 	// The property.link object are included
@@ -296,11 +352,16 @@ func main() {
 	// tval := "lzrlb501" // staff personal localid
 	fmt.Println("==== TraversalWithValue() ====")
 	fmt.Println("\t starting traversal at: " + tval)
+	// traversalDef = `{"TraversalSpec":[
+	// 	"StudentPersonal",
+	// 	"Property.Link",
+	// 	"XAPI"
+	// ]}`
 	traversalDef = `{"TraversalSpec":[
 		"StudentPersonal",
-		"Property.Link",
 		"XAPI"
 	]}`
+
 	fmt.Println("Traversal Spec:\n", traversalDef)
 	if err := json.Unmarshal([]byte(traversalDef), &jsonTraversal); err != nil {
 		panic(err)
