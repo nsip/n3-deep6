@@ -46,11 +46,14 @@ func linkReverseChecker(ctx context.Context, db *badger.DB, in <-chan IngestData
 				it := txn.NewIterator(opts)
 				defer it.Close()
 				for _, candidate := range igd.LinkCandidates {
-					prefix := []byte(fmt.Sprintf("ops|%s|", candidate.O))
-					for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
-						item := it.Item()
-						t := NewTriple(string(item.KeyCopy(nil)))
-						linksTo[t.S] = struct{}{}
+					if len(candidate.O) > 0 { //don't link to empty content
+						prefix := []byte(fmt.Sprintf("ops|%s|", candidate.O))
+						for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
+							item := it.Item()
+							t := NewTriple(string(item.KeyCopy(nil)))
+							linksTo[t.S] = struct{}{}
+
+						}
 					}
 				}
 				return nil

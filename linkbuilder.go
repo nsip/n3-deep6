@@ -56,7 +56,8 @@ func linkBuilder(ctx context.Context, db *badger.DB, wb *badger.WriteBatch, in <
 
 			//
 			// if not all specified links are satisfied, then a new link
-			// entity needs to be created
+			// entity needs to be created, may be temporary as will resolve
+			// to 'real' objects as more data arrives.
 			//
 			if len(linksTo) < len(igd.LinkCandidates) {
 				for _, candidate := range igd.LinkCandidates {
@@ -86,6 +87,7 @@ func linkBuilder(ctx context.Context, db *badger.DB, wb *badger.WriteBatch, in <
 					}
 				}
 			}
+
 			//
 			// now create links to any declared psuedo-unique properties;
 			// forces a property link to exist that creates a unique identity

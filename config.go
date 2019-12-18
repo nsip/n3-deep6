@@ -103,28 +103,32 @@ links = ["actor.mbox","actor.name","object.id","object.definition.name"]
 data_model = "Syllabus"
 required_paths = ["learning_area", "subject", "stage"]
 n3id = "id"
-links = ["learning_area", "subject", "stage"]
+#links = ["learning_area", "subject", "stage"]
+links = ["learning_area"]
 unique = ["subject","stage"]
 
 [[classifier]]
 data_model = "Subject"
 required_paths = ["Subject.subject", "Subject.synonyms"]
 n3id = "id"
-links = ["Subject.learning_area", "Subject.subject", "Subject.stage", "Subject.synonyms"]
-unique = ["Subject.subject","Subject.stage"]
+#links = ["Subject.learning_area", "Subject.subject", "Subject.stage", "Subject.synonyms"]
+links = ["Subject.learning_area", "Subject.synonyms"]
+unique = ["Subject.subject", "Subject.stage"]
 
 [[classifier]]
 data_model = "Lesson"
 required_paths = ["Lesson.learning_area", "Lesson.lesson_id"]
 n3id = "id"
-links = ["Lesson.learning_area", "Lesson.subject", "Lesson.stage"]
+#links = ["Lesson.learning_area", "Lesson.subject", "Lesson.stage"]
+links = ["Lesson.learning_area"]
 unique = ["Lesson.subject","Lesson.stage"]
 
 [[classifier]]
 data_model = "LessonSequence"
 required_paths = ["thearea", "thecourse", "thesubject", "thestage"]
 n3id = "lessonId"
-links = ["thearea", "thesubject", "thestage"]
+#links = ["thearea", "thesubject", "thestage"]
+links = ["thearea"]
 unique = ["thesubject","thestage"]
 
 [[classifier]]
