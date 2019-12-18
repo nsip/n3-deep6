@@ -37,8 +37,7 @@ func main() {
 	// load sample data
 	//
 	sampleDataPaths := []string{
-		// "./sample_data/xapi/xapi.json",
-		// "./sample_data/naplan/sif.json",
+		"./sample_data/naplan/sif.json",
 		"./sample_data/subjects/subjects.json",
 		"./sample_data/lessons/lessons.json",
 		"./sample_data/curriculum/overview.json",
@@ -340,11 +339,6 @@ func main() {
 	//
 	// TraversalWithValue()
 	//
-	// The property.link object are included
-	// in the output here so you know what
-	// was used to join the data-sets
-	// in the graphql interface property.link
-	// elements are filtered out.
 	//
 	// tval := "Julius Alexander" // xapi name
 	tval := "nwkoe858" // sif student localid
@@ -352,11 +346,6 @@ func main() {
 	// tval := "lzrlb501" // staff personal localid
 	fmt.Println("==== TraversalWithValue() ====")
 	fmt.Println("\t starting traversal at: " + tval)
-	// traversalDef = `{"TraversalSpec":[
-	// 	"StudentPersonal",
-	// 	"Property.Link",
-	// 	"XAPI"
-	// ]}`
 	traversalDef = `{"TraversalSpec":[
 		"StudentPersonal",
 		"XAPI"
@@ -386,32 +375,44 @@ func main() {
 
 	//
 	// TraversalWithValue() for NAPLAN
-	// for  given item, find who sat it,
-	// and what school they attend
+	// for  given student & given test (filter)
+	// find all tests, items, testlets, responses
+	// for that student.
 	//
-	// The property.link object are included
-	// in the output here so you know what
-	// was used to join the data-sets
-	// in the graphql interface property.link
-	// elements are filtered out.
 	//
 	// tval := "Julius Alexander" // xapi name
-	tnaplanval := "x00101463" // test item localid
+	// tnaplanval := "x00101463" // test item localid
+	tnaplanval := "330590347" // student local id
 	// tval := "jacquelin5@spambob.com" // sif email, should link to xapi and StudentPersonal
 	// tval := "lzrlb501" // staff personal localid
 	fmt.Println("==== TraversalWithValue() For  NAPLAN data ====")
 	fmt.Println("\t starting traversal at: " + tnaplanval)
 	traversalDef = `{"TraversalSpec":[
-		"NAPStudentResponseSet",
-		"StudentPersonal",
-		"NAPEventStudentLink",
-		"SchoolInfo"
-	]}`
+      "StudentPersonal",
+      "NAPEventStudentLink",
+      "NAPTest",
+      "NAPStudentResponseSet",
+      "NAPTestlet",
+      "NAPTestItem"
+  	]}`
+
 	fmt.Println("Traversal Spec:\n", traversalDef)
 	if err := json.Unmarshal([]byte(traversalDef), &jsonTraversal); err != nil {
 		panic(err)
 	}
-	resultsNAPLANTraversalWithVal, err := db.TraversalWithValue(tnaplanval, jsonTraversal, deep6.FilterSpec{})
+
+	// create filterspec as json
+	naplanFilterDef := `{
+		"NAPEventStudentLink":[{
+			"Predicate":".NAPTestRefId","TargetValue":"2d98a118-1b42-417a-80e3-5ffb6c4b7042"
+		}]
+	}`
+	fmt.Println("Filter Spec:\n", naplanFilterDef)
+	if err := json.Unmarshal([]byte(naplanFilterDef), &jsonFilterSpec); err != nil {
+		panic(err)
+	}
+
+	resultsNAPLANTraversalWithVal, err := db.TraversalWithValue(tnaplanval, jsonTraversal, jsonFilterSpec)
 	if err != nil {
 		fmt.Println("Cannot follow traversal from id:" + tnaplanval)
 		return

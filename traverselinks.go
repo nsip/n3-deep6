@@ -30,15 +30,13 @@ func traverseLinks(ctx context.Context, db *badger.DB, in <-chan TraversalData) 
 					opts.PrefetchValues = false
 					it := txn.NewIterator(opts)
 					defer it.Close()
-					linkinPrefix := []byte(fmt.Sprintf("posl|references|%s|", id))  // things that link to this object
-					linkoutPrefix := []byte(fmt.Sprintf("psol|references|%s|", id)) // objects we link to
-					// find inbound links
+					linkinPrefix := []byte(fmt.Sprintf("posl|references|%s|", id)) // things that link to this object
 					for it.Seek(linkinPrefix); it.ValidForPrefix(linkinPrefix); it.Next() {
 						item := it.Item()
 						t := NewTriple(string(item.KeyCopy(nil)))
 						targets[t.S] = targetType
 					}
-					// find outgoing links
+					linkoutPrefix := []byte(fmt.Sprintf("psol|references|%s|", id)) // objects we link to
 					for it.Seek(linkoutPrefix); it.ValidForPrefix(linkoutPrefix); it.Next() {
 						item := it.Item()
 						t := NewTriple(string(item.KeyCopy(nil)))

@@ -51,7 +51,9 @@ func findById(id string, db *badger.DB) (map[string]interface{}, error) {
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			item := it.Item()
 			t := NewTriple(string(item.Key()))
-			jsonDoc, _ = sjson.SetBytes(jsonDoc, t.P, t.O)
+			if t.O != "Property.Link" { // don't return as part of object data
+				jsonDoc, _ = sjson.SetBytes(jsonDoc, t.P, t.O)
+			}
 		}
 		return nil
 	})
@@ -156,7 +158,6 @@ func findByValue(term string, filterspec FilterSpec, db *badger.DB) (map[string]
 		for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 			item := it.Item()
 			t := NewTriple(string(item.Key()))
-			// fmt.Println(t)
 			targets[t.S] = struct{}{}
 		}
 		return nil

@@ -28,6 +28,7 @@ func traverseTypes(ctx context.Context, objectType string, filterSpec FilterSpec
 		defer close(errc)
 
 		for td := range in {
+
 			matches := make(map[string]string, 0)
 			err := db.View(func(txn *badger.Txn) error {
 				for id, _ := range td.TraversalStageTargets {
@@ -35,7 +36,7 @@ func traverseTypes(ctx context.Context, objectType string, filterSpec FilterSpec
 					opts.PrefetchValues = false
 					it := txn.NewIterator(opts)
 					defer it.Close()
-					prefix := []byte(fmt.Sprintf("pso|is-a|%s|%s", id, objectType))
+					prefix := []byte(fmt.Sprintf("osp|%s|%s|is-a", objectType, id))
 					for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
 						item := it.Item()
 						t := NewTriple(string(item.KeyCopy(nil)))
