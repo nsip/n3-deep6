@@ -12,6 +12,8 @@ import (
 	"github.com/tidwall/sjson"
 )
 
+var ErrNotFound = errors.New("object not found")
+
 //
 // Finds all tuples for a given object
 // reinflates into a json object
@@ -42,6 +44,7 @@ func (d6 *Deep6DB) FindById(id string) (map[string][]map[string]interface{}, err
 func findById(id string, db *badger.DB) (map[string]interface{}, error) {
 
 	jsonDoc, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+	matches := 0
 	err := db.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		opts.PrefetchValues = false
@@ -53,12 +56,17 @@ func findById(id string, db *badger.DB) (map[string]interface{}, error) {
 			t := NewTriple(string(item.Key()))
 			if t.O != "Property.Link" { // don't return as part of object data
 				jsonDoc, _ = sjson.SetBytes(jsonDoc, t.P, t.O)
+				matches++
 			}
 		}
 		return nil
 	})
 	if err != nil {
 		return nil, err
+	}
+
+	if matches == 0 {
+		return nil, ErrNotFound
 	}
 
 	m, ok := gjson.ParseBytes(jsonDoc).Value().(map[string]interface{})

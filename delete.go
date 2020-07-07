@@ -37,7 +37,7 @@ func deleteWithID(id string, db *badger.DB, wb *badger.WriteBatch, sbf *boom.Sca
 	// see if object exists
 	obj, err := findById(id, db)
 	if err != nil {
-		return errors.Wrap(err, "cannot find object with id: "+id)
+		return err
 	}
 	psuedoStream := []map[string]interface{}{obj}
 
