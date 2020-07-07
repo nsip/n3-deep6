@@ -48,7 +48,13 @@ func runIngestWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scalabl
 	}
 	errcList = append(errcList, errc)
 
-	genOut, errc, err := tupleGenerator(ctx, classOut)
+	remObjOut, errc, err := objectRemover(ctx, db, wb, sbf, auditLevel, folderPath, classOut)
+	if err != nil {
+		return errors.Wrap(err, "Error: cannot create object-remover component: ")
+	}
+	errcList = append(errcList, errc)
+
+	genOut, errc, err := tupleGenerator(ctx, remObjOut)
 	if err != nil {
 		return errors.Wrap(err, "Error: cannot create tuple-generator component: ")
 	}
@@ -125,7 +131,13 @@ func runIngestWithIterator(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scala
 	}
 	errcList = append(errcList, errc)
 
-	genOut, errc, err := tupleGenerator(ctx, classOut)
+	remObjOut, errc, err := objectRemover(ctx, db, wb, sbf, auditLevel, folderPath, classOut)
+	if err != nil {
+		return errors.Wrap(err, "Error: cannot create object-remover component: ")
+	}
+	errcList = append(errcList, errc)
+
+	genOut, errc, err := tupleGenerator(ctx, remObjOut)
 	if err != nil {
 		return errors.Wrap(err, "Error: cannot create tuple-generator component: ")
 	}

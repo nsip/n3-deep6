@@ -37,13 +37,15 @@ func main() {
 	// load sample data
 	//
 	sampleDataPaths := []string{
-		"./sample_data/naplan/sif.json",
+		// "./sample_data/naplan/sif.json",
 		"./sample_data/subjects/subjects.json",
 		"./sample_data/lessons/lessons.json",
 		"./sample_data/curriculum/overview.json",
 		"./sample_data/curriculum/content.json",
 		"./sample_data/sif/sif.json",
 		"./sample_data/xapi/xapi.json",
+		"./sample_data/otf/mapping1.json",
+		"./sample_data/otf/mapping2.json",
 	}
 
 	for _, path := range sampleDataPaths {
@@ -97,7 +99,7 @@ func main() {
 	fmt.Println("results size: ", len(resultsByType[typename]))
 	if err != nil {
 		fmt.Println("Cannot find objects by type:" + typename)
-		return
+		// return
 	}
 	//
 	// pretty print the json query response
@@ -131,7 +133,7 @@ func main() {
 	resultsByVal, err := db.FindByValue(val, deep6.FilterSpec{})
 	if err != nil {
 		fmt.Println("Cannot find objects with value:" + val)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsByVal))
 	//
@@ -159,7 +161,7 @@ func main() {
 	resultsByPred, err := db.FindByPredicate(pred, deep6.FilterSpec{})
 	if err != nil {
 		fmt.Println("Cannot find objects by predicate:" + pred)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsByPred))
 	//
@@ -239,7 +241,7 @@ func main() {
 	resultsTraversalId, err := db.TraversalWithId(startid, jsonTraversal, jsonFilterSpec)
 	if err != nil {
 		fmt.Println("Cannot follow traversal from:" + startid)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsTraversalId))
 	//
@@ -263,9 +265,12 @@ func main() {
 	err = db.Delete(deleteid)
 	if err != nil {
 		fmt.Println("Cannot delete object by id:" + deleteid)
-		return
+		fmt.Println("Error is: ", err)
+		// return
+	} else {
+		fmt.Println("   deleted: " + deleteid)
 	}
-	fmt.Println("   deleted: " + deleteid)
+
 	fmt.Println("==========")
 
 	//
@@ -280,7 +285,7 @@ func main() {
 	resultsTraversalDelete, err := db.TraversalWithId(startid, jsonTraversal, jsonFilterSpec)
 	if err != nil {
 		fmt.Println("Cannot follow traversal from:" + startid)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsTraversalDelete))
 	//
@@ -321,7 +326,7 @@ func main() {
 	resultsOrderedTraversal, err := db.TraversalWithId(schoolId, jsonOrderedTraversal, deep6.FilterSpec{})
 	if err != nil {
 		fmt.Println("Cannot follow traversal from:" + startid)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsOrderedTraversal))
 	//
@@ -358,7 +363,7 @@ func main() {
 	resultsTraversalWithVal, err := db.TraversalWithValue(tval, jsonTraversal, deep6.FilterSpec{})
 	if err != nil {
 		fmt.Println("Cannot follow traversal from id:" + tval)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsTraversalWithVal))
 	//
@@ -415,13 +420,50 @@ func main() {
 	resultsNAPLANTraversalWithVal, err := db.TraversalWithValue(tnaplanval, jsonTraversal, jsonFilterSpec)
 	if err != nil {
 		fmt.Println("Cannot follow traversal from id:" + tnaplanval)
-		return
+		// return
 	}
 	fmt.Println("results size: ", len(resultsNAPLANTraversalWithVal))
 	//
 	// pretty print the json query response
 	//
 	jsonBytes, err = json.Marshal(resultsNAPLANTraversalWithVal)
+	if err != nil {
+		log.Fatal("ERROR: json marshalling error: ", err)
+	}
+	err = json.Indent(&prettyJSON, jsonBytes, "", "    ")
+	fmt.Println(string(prettyJSON.Bytes()))
+	fmt.Println("==========")
+	prettyJSON.Reset()
+
+	//
+	// TraversalWithValue() for OTF
+	//
+	//
+	// tval := "Julius Alexander" // xapi name
+	itemval := "ACMNA075" // sreams test id
+	// tval := "jacquelin5@spambob.com" // sif email, should link to xapi and StudentPersonal
+	// tval := "lzrlb501" // staff personal localid
+	fmt.Println("==== TraversalWithValue() ====")
+	fmt.Println("\t starting traversal at: " + itemval)
+	traversalDef = `{"TraversalSpec":[
+		"OtfProviderItem",
+		"OtfNLPLink"
+	]}`
+
+	fmt.Println("Traversal Spec:\n", traversalDef)
+	if err := json.Unmarshal([]byte(traversalDef), &jsonTraversal); err != nil {
+		panic(err)
+	}
+	resultsTraversalWithValOTF, err := db.TraversalWithValue(itemval, jsonTraversal, deep6.FilterSpec{})
+	if err != nil {
+		fmt.Println("Cannot follow traversal from id:" + itemval)
+		// return
+	}
+	fmt.Println("results size: ", len(resultsTraversalWithValOTF))
+	//
+	// pretty print the json query response
+	//
+	jsonBytes, err = json.Marshal(resultsTraversalWithValOTF)
 	if err != nil {
 		log.Fatal("ERROR: json marshalling error: ", err)
 	}
