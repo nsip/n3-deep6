@@ -1,12 +1,16 @@
 # n3-deep6
 An opinionated hexastore for linking education data
 
+Update Nov. 2020
+Deep-6 has been in use on multiple projects for over a year now, and we're pretty happy with it.
+The main documentaion can actually be found at https://github.com/nsip/n3 since the db is
+only one layer of the n3 solution - from that link you can download prebuilt binaries
+that include the crdt and GraphQL layers, all hosted in a web service.
 
-Work in progress, much more documentation to come, but the main.go in /example/d6 
-shows most of the key fetures.
+More documentation available (see above), but the main.go in /example/d6 shows most of the key fetures using this as a pure golang embedded db.
 
 Sample datasets for typical ed-tech data; SIF, XAPI are provided along with
-samples of arbitrary json formats that represent the sort of applicaiton data
+samples of arbitrary json formats that represent the sort of application data
 you might need to integrate.
 
 Deep6 in this repo only really of use to anyone who wants to use an embedded datastore from within
