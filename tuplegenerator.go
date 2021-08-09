@@ -35,7 +35,7 @@ func tupleGenerator(ctx context.Context, in <-chan IngestData) (
 			tuples := make([]Triple, 0)
 			for k, v := range m {
 				t := Triple{
-					S: fmt.Sprintf("%s", igd.N3id),
+					S: igd.N3id,
 					P: k,
 					O: fmt.Sprintf("%v", v),
 				}

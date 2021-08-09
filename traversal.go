@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -50,7 +50,7 @@ func traversalWithId(id string, traversalspec []string, filterspec FilterSpec, d
 		return nil, errors.New("no traversalspec provided")
 	}
 
-	results := make(map[string][]map[string]interface{}, 0)
+	results := make(map[string][]map[string]interface{})
 
 	// set up a context to manage traversal pipeline
 	ctx, cancelFunc := context.WithCancel(context.Background())
@@ -170,8 +170,8 @@ func traversalWithValue(val string, traversalspec []string, filterspec FilterSpe
 	//
 	// Find the objects that contain the value
 	//
-	results := make(map[string][]map[string]interface{}, 0)
-	targets := make(map[string]interface{}, 0)
+	results := make(map[string][]map[string]interface{})
+	targets := make(map[string]interface{})
 	err := db.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		opts.PrefetchValues = false
@@ -190,9 +190,9 @@ func traversalWithValue(val string, traversalspec []string, filterspec FilterSpe
 	}
 
 	//
-	// follw the traversal spec for each of the objects
+	// follow the traversal spec for each of the objects
 	//
-	for target, _ := range targets {
+	for target := range targets {
 		traversalResults, err := traversalWithId(target, traversalspec, filterspec, db, auditLevel)
 		if err != nil {
 			return nil, err

@@ -28,7 +28,7 @@ func resultsTidy(ctx context.Context, resultsReceiver *map[string][]map[string]i
 
 			objectType, ok := m["is-a"].(string)
 			if !ok {
-				errc <- errors.New("object with no type encountered in objectTidy():")
+				errc <- errors.New("object with no type encountered in objectTidy(): ")
 				return
 			}
 

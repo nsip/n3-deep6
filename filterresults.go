@@ -16,7 +16,7 @@ import (
 //
 func filterResults(searchResults []map[string]interface{}, filterSpec FilterSpec) (map[string][]map[string]interface{}, error) {
 
-	results := make(map[string][]map[string]interface{}, 0)
+	results := make(map[string][]map[string]interface{})
 
 	// monitor classifier for errors
 	var errcList []<-chan error

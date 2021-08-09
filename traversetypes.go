@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -29,9 +29,9 @@ func traverseTypes(ctx context.Context, objectType string, filterSpec FilterSpec
 
 		for td := range in {
 
-			matches := make(map[string]string, 0)
+			matches := make(map[string]string)
 			err := db.View(func(txn *badger.Txn) error {
-				for id, _ := range td.TraversalStageTargets {
+				for id := range td.TraversalStageTargets {
 					opts := badger.DefaultIteratorOptions
 					opts.PrefetchValues = false
 					it := txn.NewIterator(opts)
@@ -55,8 +55,8 @@ func traverseTypes(ctx context.Context, objectType string, filterSpec FilterSpec
 			//
 			filters, ok := filterSpec[objectType]
 			if ok {
-				filteredIds := make(map[string]string, 0)
-				for match, _ := range matches {
+				filteredIds := make(map[string]string)
+				for match := range matches {
 					object, err := findById(match, db)
 					if err != nil {
 						errc <- errors.Wrap(err, "TraverseTypes: could not retrieve object for filtering: ")

@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 	boom "github.com/tylertreat/BoomFilters"
 )
@@ -34,7 +34,7 @@ func runIngestWithReader(db *badger.DB, wb *badger.WriteBatch, sbf *boom.Scalabl
 	var errcList []<-chan error
 
 	//
-	// build the pipleine by connecting all stages
+	// build the pipeline by connecting all stages
 	//
 	jsonOut, errc, err := jsonReaderSource(ctx, r)
 	if err != nil {

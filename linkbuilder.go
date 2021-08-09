@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -32,7 +32,7 @@ func linkBuilder(ctx context.Context, db *badger.DB, wb *badger.WriteBatch, in <
 		defer close(errc)
 
 		for igd := range in {
-			linksTo := make(map[string]interface{}, 0)
+			linksTo := make(map[string]interface{})
 			// first see if anything links
 			err := db.View(func(txn *badger.Txn) error {
 				opts := badger.DefaultIteratorOptions
@@ -111,7 +111,7 @@ func linkBuilder(ctx context.Context, db *badger.DB, wb *badger.WriteBatch, in <
 
 			// convert all known links into link triples
 			linkTriples := make([]Triple, 0)
-			for l, _ := range linksTo {
+			for l := range linksTo {
 				if l == igd.N3id {
 					continue // don't self link
 				}

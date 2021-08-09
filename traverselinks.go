@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -23,7 +23,7 @@ func traverseLinks(ctx context.Context, db *badger.DB, in <-chan TraversalData) 
 		defer close(errc)
 
 		for td := range in {
-			targets := make(map[string]string, 0)
+			targets := make(map[string]string)
 			err := db.View(func(txn *badger.Txn) error {
 				for id, targetType := range td.TraversalStageTargets {
 					opts := badger.DefaultIteratorOptions

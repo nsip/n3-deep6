@@ -5,7 +5,7 @@ package deep6
 import (
 	"context"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -31,7 +31,7 @@ func traversalHydrator(ctx context.Context, resultsReceiver *map[string][]map[st
 
 		for td := range in {
 
-			resultsByType := make(map[string][]map[string]interface{}, 0)
+			resultsByType := make(map[string][]map[string]interface{})
 			for match, objectType := range td.TraversalMatches {
 				result, err := findById(match, db)
 				if err != nil {

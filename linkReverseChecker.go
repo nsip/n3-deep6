@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 )
 
@@ -37,7 +37,7 @@ func linkReverseChecker(ctx context.Context, db *badger.DB, in <-chan IngestData
 		defer close(errc)
 
 		for igd := range in {
-			linksTo := make(map[string]interface{}, 0)
+			linksTo := make(map[string]interface{})
 			// first see if anything reverse links
 			// by checking for the presence of the object member
 			err := db.View(func(txn *badger.Txn) error {
@@ -64,7 +64,7 @@ func linkReverseChecker(ctx context.Context, db *badger.DB, in <-chan IngestData
 			}
 
 			// add any reverse links to the list of viable candidates
-			for k, _ := range linksTo {
+			for k := range linksTo {
 				reverseLinkTriple := Triple{
 					S: "reverse",
 					P: "link",

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -156,7 +156,7 @@ func (d6 *Deep6DB) FindByValue(term string, filterspec FilterSpec) (map[string][
 func findByValue(term string, filterspec FilterSpec, db *badger.DB) (map[string][]map[string]interface{}, error) {
 
 	results := make([]map[string]interface{}, 0)
-	targets := make(map[string]interface{}, 0)
+	targets := make(map[string]interface{})
 	err := db.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		opts.PrefetchValues = false
@@ -174,7 +174,7 @@ func findByValue(term string, filterspec FilterSpec, db *badger.DB) (map[string]
 		return nil, err
 	}
 
-	for target, _ := range targets {
+	for target := range targets {
 		result, err := findById(target, db)
 		if err != nil {
 			return nil, err
@@ -217,7 +217,7 @@ func (d6 *Deep6DB) FindByPredicate(predicate string, filterspec FilterSpec) (map
 func findByPredicate(predicate string, filterspec FilterSpec, db *badger.DB) (map[string][]map[string]interface{}, error) {
 
 	results := make([]map[string]interface{}, 0)
-	targets := make(map[string]interface{}, 0) // use a map here to de-dupe, so user can pass part predicate
+	targets := make(map[string]interface{}) // use a map here to de-dupe, so user can pass part predicate
 	err := db.View(func(txn *badger.Txn) error {
 		opts := badger.DefaultIteratorOptions
 		opts.PrefetchValues = false
@@ -236,7 +236,7 @@ func findByPredicate(predicate string, filterspec FilterSpec, db *badger.DB) (ma
 		return nil, err
 	}
 
-	for target, _ := range targets {
+	for target := range targets {
 		result, err := findById(target, db)
 		if err != nil {
 			return nil, err

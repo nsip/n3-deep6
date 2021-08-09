@@ -47,6 +47,9 @@ func createDefaultConfig(filePath string) error {
 //
 func writeDefaultClassifierConfig(fname string) error {
 	f, err := os.Create(fname)
+	if err != nil {
+		return err
+	}
 	defer f.Close()
 	_, err = f.WriteString(classifierConfigText)
 	if err != nil {

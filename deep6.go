@@ -16,7 +16,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	boom "github.com/tylertreat/BoomFilters"
 )
 

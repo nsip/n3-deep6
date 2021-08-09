@@ -6,7 +6,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v3"
 	"github.com/pkg/errors"
 	boom "github.com/tylertreat/BoomFilters"
 )

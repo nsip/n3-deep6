@@ -16,7 +16,7 @@ func traversalSource(ctx context.Context, id string) (
 		defer close(out)
 		defer close(errc)
 
-		td := TraversalData{TraversalMatches: make(map[string]string, 0), TraversalStageTargets: make(map[string]string, 0)}
+		td := TraversalData{TraversalMatches: make(map[string]string), TraversalStageTargets: make(map[string]string)}
 		td.TraversalStageTargets[id] = "unknown"
 
 		select {
