@@ -8,7 +8,7 @@ require (
 	github.com/dgraph-io/badger v1.6.1
 	github.com/nats-io/nuid v1.0.1
 	github.com/pkg/errors v0.9.1
-	github.com/tidwall/gjson v1.6.5
+	github.com/tidwall/gjson v1.9.3
 	github.com/tidwall/sjson v1.1.1
 	github.com/tylertreat/BoomFilters v0.0.0-20200520150052-42a7b4300c0c
 )
